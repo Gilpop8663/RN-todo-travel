@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { theme } from "./colors";
 
 const STORAGE_KEY = "@toDos";
+const WHERE_IS = "@where";
 
 export default function App() {
   const [isWork, setIsWork] = useState(true);
@@ -25,16 +26,19 @@ export default function App() {
   const SaveToDos = async (toSave) => {
     try {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+      await AsyncStorage.setItem(WHERE_IS, isWork.toString());
     } catch (e) {
       console.log(e);
     }
   };
   const LoadToDos = async () => {
     try {
+      const a = await AsyncStorage.getItem(WHERE_IS);
       const s = await AsyncStorage.getItem(STORAGE_KEY);
       if (JSON.parse(s) === null) {
         return;
       }
+      setIsWork(Boolean(a));
       setToDos(JSON.parse(s));
     } catch (e) {
       console.log(e);
@@ -58,9 +62,9 @@ export default function App() {
     if (text === "") {
       return;
     }
-    const newToDos = {
+    newToDos = {
       ...toDos,
-      [Date.now()]: { text: text, work: isWork },
+      [Date.now()]: { text: text, work: isWork, done: false },
     };
     setToDos(newToDos);
     await SaveToDos(newToDos);
@@ -72,6 +76,21 @@ export default function App() {
   };
   const onTravle = () => {
     setIsWork(false);
+  };
+  const doneToDos = (key, isDone) => {
+    console.log(newToDos);
+    const newToDos = {
+      ...toDos,
+      [key]: {
+        text: toDos[key].text,
+        work: toDos[key].work,
+        done: isDone,
+      },
+    };
+    console.log(key, toDos[key].text, toDos[key].work);
+    console.log(newToDos);
+    setToDos(newToDos);
+    SaveToDos(newToDos);
   };
 
   return (
@@ -104,6 +123,24 @@ export default function App() {
           toDos[item].work === isWork ? (
             <View style={styles.toDo} key={item}>
               <Text style={styles.toDoText}>{toDos[item].text}</Text>
+              <TouchableOpacity>
+                {toDos[item].done === false ? (
+                  <Fontisto
+                    onPress={() => doneToDos(item, true)}
+                    name="checkbox-passive"
+                    size={18}
+                    color={theme.grey}
+                  />
+                ) : (
+                  <View style={{ color: "white", borderStyle: "solid" }}>
+                    <Fontisto
+                      onPress={() => doneToDos(item, false)}
+                      name="checkbox-active"
+                      size={18}
+                    />
+                  </View>
+                )}
+              </TouchableOpacity>
               <TouchableOpacity onPress={() => deleteToDos(item)}>
                 <Fontisto name="trash" size={18} color={theme.grey} />
               </TouchableOpacity>
