@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import { Fontisto } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Entypo } from "@expo/vector-icons";
+import Dialog from "react-native-dialog";
 import { theme } from "./colors";
 
 const STORAGE_KEY = "@toDos";
@@ -20,6 +22,7 @@ export default function App() {
   const [isWork, setIsWork] = useState(true);
   const [text, setText] = useState("");
   const [toDos, setToDos] = useState({});
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
     LoadToDos();
   }, []);
@@ -77,8 +80,11 @@ export default function App() {
   const onTravle = () => {
     setIsWork(false);
   };
+  const onPop = () => {
+    setVisible(true);
+  };
   const doneToDos = (key, isDone) => {
-    console.log(newToDos);
+    //console.log(newToDos);
     const newToDos = {
       ...toDos,
       [key]: {
@@ -87,8 +93,8 @@ export default function App() {
         done: isDone,
       },
     };
-    console.log(key, toDos[key].text, toDos[key].work);
-    console.log(newToDos);
+    //console.log(key, toDos[key].text, toDos[key].work);
+    //console.log(newToDos);
     setToDos(newToDos);
     SaveToDos(newToDos);
   };
@@ -140,6 +146,31 @@ export default function App() {
                     />
                   </View>
                 )}
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Entypo
+                  name="pencil"
+                  size={18}
+                  color={theme.grey}
+                  onPress={() => onPop(item)}
+                />
+                <View>
+                  <Dialog.Container visible={visible}>
+                    <Dialog.Title>Text modification</Dialog.Title>
+                    <Dialog.Description>
+                      Do you want me to modify the text? Please write down the
+                      text you want to modify.
+                    </Dialog.Description>
+                    <Dialog.Input
+                      value={text}
+                      returnKeyType="done"
+                      onChangeText={onChange}
+                      placeholder="Text to be modified."
+                    ></Dialog.Input>
+                    <Dialog.Button label="Cancel" />
+                    <Dialog.Button label="Modify" />
+                  </Dialog.Container>
+                </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => deleteToDos(item)}>
                 <Fontisto name="trash" size={18} color={theme.grey} />
