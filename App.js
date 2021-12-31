@@ -65,7 +65,7 @@ export default function App() {
     if (text === "") {
       return;
     }
-    newToDos = {
+    const newToDos = {
       ...toDos,
       [Date.now()]: { text: text, work: isWork, done: false },
     };
@@ -82,6 +82,25 @@ export default function App() {
   };
   const onPop = () => {
     setVisible(true);
+  };
+
+  const onModify = async (item) => {
+    if (text === "") {
+      return;
+    }
+    const newToDos = {
+      ...toDos,
+      [item]: {
+        text: text,
+        work: toDos[item].work,
+        done: toDos[item].done,
+      },
+    };
+    //console.log(newToDos);
+    setToDos(newToDos);
+    await SaveToDos(newToDos);
+    setVisible(false);
+    setText("");
   };
   const doneToDos = (key, isDone) => {
     //console.log(newToDos);
@@ -167,8 +186,14 @@ export default function App() {
                       onChangeText={onChange}
                       placeholder="Text to be modified."
                     ></Dialog.Input>
-                    <Dialog.Button label="Cancel" />
-                    <Dialog.Button label="Modify" />
+                    <Dialog.Button
+                      onPress={() => setVisible(false)}
+                      label="Cancel"
+                    />
+                    <Dialog.Button
+                      onPress={() => onModify(item)}
+                      label="Modify"
+                    />
                   </Dialog.Container>
                 </View>
               </TouchableOpacity>
