@@ -147,7 +147,17 @@ export default function App() {
         {Object.keys(toDos).map((item) =>
           toDos[item].work === isWork ? (
             <View style={styles.toDo} key={item}>
-              <Text style={styles.toDoText}>{toDos[item].text}</Text>
+              <Text
+                style={{
+                  ...styles.toDoText,
+                  color: toDos[item].done ? "gray" : "white",
+                  textDecorationLine: toDos[item].done
+                    ? "line-through"
+                    : "none",
+                }}
+              >
+                {toDos[item].text}
+              </Text>
               <TouchableOpacity>
                 {toDos[item].done === false ? (
                   <Fontisto
@@ -159,6 +169,7 @@ export default function App() {
                 ) : (
                   <View style={{ color: "white", borderStyle: "solid" }}>
                     <Fontisto
+                      color={theme.grey}
                       onPress={() => doneToDos(item, false)}
                       name="checkbox-active"
                       size={18}
@@ -234,7 +245,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   toDoText: {
-    color: "white",
     fontSize: 16,
     fontWeight: "600",
   },
