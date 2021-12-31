@@ -24,7 +24,7 @@ React Native 를 배우면서 내가 앞으로 만들 어플을 생각하니 더
 ## 스크린샷
 
 <img src="https://user-images.githubusercontent.com/80146176/147840280-d168a1ed-3bf2-4d07-874c-b33a15522896.png" width="auto" />
-<img src="https://user-images.githubusercontent.com/80146176/147840303-09fb26b3-2731-414b-af18-55afbbef6e17.png" width="auto" />
+<img src="https://user-images.githubusercontent.com/80146176/147840303-09fb26b3-2731-414b-af18-55afbbef6e17.png" width="800" />
 
 ## 배포 사이트
 
